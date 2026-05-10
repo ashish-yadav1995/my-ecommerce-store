@@ -1,20 +1,3 @@
-// import { Navigate } from "react-router-dom";
-// import { useAuth } from "../context/AuthContext";
-
-// function ProtectedRoute({ children }) {
-//   // children pass karana bhul gaya tha jiske wajah se admin ka component show nahi ho raha tha
-
-//   const { user } = useAuth();
-//   if (!user || user.role !== "admin") {
-//     return <Navigate to="/login" />;
-//   }
-
-//   return children;
-// }
-
-// export default ProtectedRoute;
-
-
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -27,7 +10,6 @@ function ProtectedRoute({ children, role, guestOnly }) {
 
   
   // 1. Agar user logged in hi nahi hai
-  debugger
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }

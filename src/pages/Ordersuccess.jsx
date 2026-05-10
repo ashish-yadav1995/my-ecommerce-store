@@ -1,22 +1,3 @@
-// import { useLocation } from "react-router-dom";
-
-// const Ordersuccess = () => {
-//   const location = useLocation();
-//   const order = location.state.order;
-//   console.log("location", location);
-
-//   return (
-//     <>
-//       <h1>Order Success</h1>
-//       <div>{order.id}</div>
-//     </>
-//   );
-// };
-// export default Ordersuccess;
-
-
-
-
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -25,35 +6,113 @@ function OrderSuccess() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, setUser }  = useAuth();
+  const allUser = localStorage.getItem("all_users")?
+                JSON.parse(localStorage.getItem("all_users")):[];
   
   // Checkout page se jo 'finalOrder' bheja tha, wo yahan milega
   const order = location.state?.order;
-
+  console.log("order",order)
 
   useEffect(()=>{
-    debugger
-   const allUser = JSON.parse(localStorage.getItem("all_users"));
    const isexist = allUser.find((u)=> {
     return u.address === order.address 
   })
    if(!isexist){
      const modifiedUser = allUser.map((regisUser)=>{
          return regisUser.email === user.email ? 
-         {...regisUser,address:order.address, city: order.city , zipcode:order.zipcode} :regisUser;
+         {...regisUser,
+          address:order.address, 
+          city: order.city , 
+          zipcode:order.zipcode,
+          orders : [
+       {
+      id: order.id,                                     
+      date: order.date,
+      orderDate_and_time: new Date().toISOString(),
+      total: order.total,
+      status: "PROCESSING",
+      items:order.items.map((item)=>{
+      return { name: item.title, qty: item.quantity, price: item.price, img: item.images[0]}
+      })
+       }
+         ]
+          } :regisUser;
      }) 
 
-     console.log("modifiedUser",modifiedUser)
      
      setUser(
       {...user,
         address:order.address,
         city: order.city , 
-        zipcode:order.zipcode
+        zipcode:order.zipcode,
+           orders : [
+       {
+      id: order.id,                                     
+      date: order.date,
+      orderDate_and_time: new Date().toISOString(),
+      total: order.total,
+      status: "PROCESSING",
+      items:order.items.map((item)=>{
+      return { name: item.title, qty: item.quantity, price: item.price, img: item.images[0]}
+      })
+       }
+         ]
       })
       
      localStorage.setItem("all_users", JSON.stringify(modifiedUser));
+   }else{
+    const modifiedUser = allUser.map((regisUser)=>{
+          return regisUser.email == user.email ?  
+          {
+                ...regisUser,
+                // orders:regisUser.orders? regisUser.orders.map((item)=>{}):""
+                 orders:regisUser.orders? [...regisUser.orders,{ id: order.id,                                     
+                date: order.date,
+                orderDate_and_time: new Date().toISOString(),
+                total: order.total,
+                status: "PROCESSING",
+                items:order.items.map((item)=>{
+                return { name: item.title, qty: item.quantity, price: item.price, img: item.images[0]}
+                })}]:[{
+                   id: order.id,                                     
+                   date: order.date,
+                   orderDate_and_time: new Date().toISOString(),
+                   total: order.total,
+                   status: "PROCESSING",
+                   items:order.items.map((item)=>{
+                   return { name: item.title, qty: item.quantity, price: item.price, img: item.images[0]}
+                   })
+                }]
+          }
+          :regisUser;
+    })
+
+     setUser(
+      {...user,
+           orders:user.orders? [...user.orders,{ id: order.id,                                     
+                date: order.date,
+                orderDate_and_time: new Date().toISOString(),
+                total: order.total,
+                status: "PROCESSING",
+                items:order.items.map((item)=>{
+                return { name: item.title, qty: item.quantity, price: item.price, img: item.images[0]}
+                })}]:[
+       {
+      id: order.id,                                     
+      date: order.date,
+      orderDate_and_time: new Date().toISOString(),
+      total: order.total,
+      status: "PROCESSING",
+      items:order.items.map((item)=>{
+      return { name: item.title, qty: item.quantity, price: item.price, img: item.images[0]}
+      })
+       }
+         ]
+      })
+
+    localStorage.setItem("all_users", JSON.stringify(modifiedUser));
    }
-  },[order,user])
+  },[order]) // user ki dependency dalne k wajah se continiuos call ho raha tha
 
   // Agar koi direct is page par aaye bina order ke, toh use home bhej do
   if (!order) {

@@ -65,7 +65,6 @@ function Navbar() {
   const { user } = useAuth();
 
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
-  debugger;
   return (
     // 'sticky top-0' navbar ko chipkayega, 'z-50' use dusre elements ke upar rakhega
     <nav className="sticky top-0 z-50 bg-black text-white px-6 py-4 flex justify-between items-center shadow-lg">

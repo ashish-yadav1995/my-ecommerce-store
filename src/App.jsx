@@ -13,11 +13,12 @@ import Signup from "./pages/Signup";
 import Logout from "./pages/Logout";
 import Profile from "./pages/Profile";
 import { useAuth } from "./context/AuthContext";
+import TrackOrder from "./pages/TrackOrder";
+import OrderDetails from "./pages/OrderDetails";
 
 function App() {
 
    const { user, loading } = useAuth()
-   debugger
    console.log("user",user)
    
   return (
@@ -58,6 +59,8 @@ function App() {
           } />
           <Route path="/productdetail" element={<ProductDetail />} />
           <Route path="/order-success" element={<Ordersuccess/>}/>
+          <Route path = "/trackorder" element={<TrackOrder/>}/>
+           <Route path = "/order-details/:id" element={<OrderDetails/>}/>
           <Route path="/checkout" element={
             <ProtectedRoute>  
               <Checkout/>

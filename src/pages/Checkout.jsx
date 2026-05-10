@@ -33,6 +33,7 @@ const Checkout = () => {
         city: data.city,
         zipcode: data.zipcode,
         date: new Date().toLocaleDateString(),
+        orderDate_and_time: new Date().toISOString()
       };
 
       clearCart();
