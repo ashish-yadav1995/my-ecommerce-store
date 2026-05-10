@@ -190,7 +190,7 @@
 
 import { useCart } from "../context/CartContext";
 import { Link, useNavigate } from "react-router-dom";
-import Savetocart from "./Savetocart";
+import Savetocart from "./TempCart";
 import { useState } from "react";
 import { useWishList } from "../context/WishlistContext";
 
